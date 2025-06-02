@@ -1,0 +1,251 @@
+clc
+clear
+close all
+addpath('util');
+
+img_num2 = 35;% 141 500
+data_name = 'UT10';%'20240103_105256' '20240103_2'
+counter = 1;
+gridsize = 30;
+lambda_flat = 940;
+savepath_WIPC = 'WIPC_kpts-dcpts_colmap';
+savepath_IPC = 'IPC_kpts-dcpts_colmap';
+%% keyframe
+path_img_ref = ['../1_DataPreparation/' data_name '/Color_masked/gridsize ' num2str(gridsize) '/' sprintf('%03d', img_num2) '.png'];
+path_mask_ref = ['../2_DataPreprocessing/' data_name '/masks_modified gs' num2str(gridsize) '/' sprintf('%03d', img_num2) '.png'];
+mask_exist = 1;
+[key_points_ref, descriptors_ref] = feature_detection_vlfeet(path_img_ref, ...
+    path_mask_ref, mask_exist);
+matlab2colmap(key_points_ref, descriptors_ref, savepath_WIPC, img_num2)
+nbr_kpts_2_WIPC(counter) = size(key_points_ref,2);
+% figure , imshow(path_img_ref)
+% perm = randperm(size(key_points_ref,2)) ;
+% sel = perm(1:end) ;
+% h11 = vl_plotframe(key_points_ref(:,sel)) ;
+% h22 = vl_plotframe(key_points_ref(:,sel)) ;
+% set(h11,'color','k','linewidth',3) ;
+% set(h22,'color','y','linewidth',2) ;
+% pause(.2)
+
+% ref warped feature detection
+path_img_warped_ref_view = ['../4_Warping/' data_name '/img_flat_gs' num2str(gridsize) '/' ...
+    '/Frame_' sprintf('%d', img_num2) '/lambda' num2str(lambda_flat) '.png'];
+mask_exist = 1;
+path_mask_flat_ref = ['../3_Flattening/' data_name '/masks_flat gs' num2str(gridsize) ...
+    '/Frame ' sprintf('%d', img_num2) '/lambda' num2str(lambda_flat) '.png'];
+[key_points_img_warped_ref_view, descriptors_img_warped_ref_view] = feature_detection_vlfeet(path_img_warped_ref_view, ...
+    path_mask_flat_ref, mask_exist);
+
+nbr_kpts_2_IPC(counter) = size(key_points_img_warped_ref_view,2);
+% figure , imshow(path_img_warped_ref_view)
+% perm = randperm(size(key_points_img_warped_ref_view,2)) ;
+% sel = perm(1:end) ;
+% h11 = vl_plotframe(key_points_img_warped_ref_view(:,sel)) ;
+% h22 = vl_plotframe(key_points_img_warped_ref_view(:,sel)) ;
+% set(h11,'color','k','linewidth',3) ;
+% set(h22,'color','y','linewidth',2) ;
+% pause(.2)
+
+%% Without IPC
+for img_num1 = 81:125
+    img_num1
+MatchThreshold = 1.8;
+path_img_other_view = ['../1_DataPreparation/' data_name '/Color_masked/gridsize ' num2str(gridsize) '/' sprintf('%03d', img_num1) '.png'];
+path_mask_other_view = ['../2_DataPreprocessing/' data_name '/masks_modified gs' num2str(gridsize) '/' sprintf('%03d', img_num1) '.png'];
+mask_exist = 1;
+[key_points_other_view, descriptors_other_view] = feature_detection_vlfeet(path_img_other_view, ...
+    path_mask_other_view, mask_exist);
+matlab2colmap(key_points_other_view, descriptors_other_view, savepath_WIPC, img_num1)
+
+nbr_kpts_1_WIPC(counter) = size(key_points_other_view,2);
+% figure , imshow(path_img_other_view)
+% perm = randperm(size(key_points_other_view,2)) ;
+% sel = perm(1:end) ;
+% h11 = vl_plotframe(key_points_other_view(:,sel)) ;
+% h22 = vl_plotframe(key_points_other_view(:,sel)) ;
+% set(h11,'color','k','linewidth',3) ;
+% set(h22,'color','y','linewidth',2) ;
+
+[matches, scores] = vl_ubcmatch(descriptors_other_view, descriptors_ref, MatchThreshold);
+path_1_original = ['../1_DataPreparation/' data_name '/Color' '/' sprintf('%03d', img_num1) '.png'];
+path_2_original = ['../1_DataPreparation/' data_name '/Color' '/' sprintf('%03d', img_num2) '.png'];
+Ia = imread(path_1_original);
+Ib = imread(path_2_original);
+% figure
+% imshow(cat(2, Ia, Ib)) ;
+% pause(.2)
+% axis image off ;
+% hold on
+% %Plot matched points on both images
+numMatches(counter) = size(matches, 2);
+% colors = lines(numMatches(counter)); 
+% for i = 1:numMatches(counter)
+%     x1 = key_points_other_view(1,matches(1,i));
+%     y1 = key_points_other_view(2,matches(1,i));
+% 
+%     x2 = key_points_ref(1,matches(2,i));
+%     y2 = key_points_ref(2,matches(2,i));
+%     x2 = key_points_ref(1,matches(2,i)) + size(Ia, 2);
+% 
+%     plot( [x1, x2], [y1, y2], 'Color', colors(i,:), 'LineWidth', 1);
+%     plot( x1, y1, 'o', 'Color', colors(i,:), 'MarkerSize', 3, 'LineWidth', 1.2);
+%     plot( x2, y2, 'o', 'Color', colors(i,:), 'MarkerSize', 3, 'LineWidth', 1.2);
+% end
+% title( ['Matched Points without IPC: ' sprintf('%03d', img_num1) ', nbr matches: ' sprintf('%d',numMatches(counter) )]);
+% hold off;
+% pause(.2)
+% % Save as PNG
+% saveas(gcf, ['WIPC/' sprintf('%03d', img_num1) '.png']);
+%% With IPC in Flat domain 
+path_img_warped_other_view = ['../4_Warping/' data_name '/img_flat_gs' num2str(gridsize) '/' ...
+    '/Frame_' sprintf('%d', img_num1) '/lambda' num2str(lambda_flat) '.png']
+
+mask_exist = 1;
+path_mask_flat_other_view = ['../3_Flattening/' data_name '/masks_flat gs' num2str(gridsize) ...
+    '/Frame ' sprintf('%d', img_num1) '/lambda' num2str(lambda_flat) '.png']
+[key_points_img_warped_other_view, descriptors_img_warped_other_view] = feature_detection_vlfeet(path_img_warped_other_view, ...
+    path_mask_flat_other_view, mask_exist);
+matlab2colmap(key_points_img_warped_other_view, descriptors_img_warped_other_view, savepath_IPC, img_num1)
+
+nbr_kpts_1_IPC(counter) = size(key_points_img_warped_other_view,2);
+
+% pause(0.2)
+% 
+% figure , imshow(path_img_warped_other_view)
+% perm = randperm(size(key_points_img_warped_other_view,2)) ;
+% sel = perm(1:end) ;
+% h11 = vl_plotframe(key_points_img_warped_other_view(:,sel)) ;
+% h22 = vl_plotframe(key_points_img_warped_other_view(:,sel)) ;
+% set(h11,'color','k','linewidth',3) ;
+% set(h22,'color','y','linewidth',2) ;
+% pause(.5)
+
+
+Ia_w = imread(path_img_warped_other_view);
+Ib_w = imread(path_img_warped_ref_view);
+figure
+imshow(cat(2, Ia_w, Ib_w)) ;
+axis image off ;
+hold on
+[matches_IPC, scores_IPC] = vl_ubcmatch(descriptors_img_warped_ref_view, descriptors_img_warped_other_view, MatchThreshold);
+
+% Plot matched points on both warped images
+numMatches_IPC(counter) = size(matches_IPC, 2);
+colors = lines(numMatches_IPC(counter)); % Generate distinct colors for each match
+pause(.2)
+
+for i = 1:numMatches_IPC(counter)
+
+    x1 = key_points_img_warped_other_view(1,matches_IPC(2,i));
+    y1 = key_points_img_warped_other_view(2,matches_IPC(2,i)); 
+    x2 = key_points_img_warped_ref_view(1,matches_IPC(1,i)) + size(Ia, 2);
+    y2 = key_points_img_warped_ref_view(2,matches_IPC(1,i));   
+    plot( [x1, x2], [y1, y2], 'Color', colors(i,:), 'LineWidth', 1);
+    plot( x1, y1, 'o', 'Color', colors(i,:), 'MarkerSize', 3, 'LineWidth', 1.2);
+    plot( x2, y2, 'o', 'Color', colors(i,:), 'MarkerSize', 3, 'LineWidth', 1.2);
+
+end
+
+title( ['Matched Points with IPC: ' sprintf('%03d', img_num1) 'nbr matches: ' sprintf('%d', numMatches_IPC(counter) )]);
+hold off;
+pause(.5)
+saveas(gcf, ['IPC/' sprintf('%03d', img_num1) '.png']);
+
+
+
+% With IPC, back-transformed
+convex = 1;
+lambda_nonconvex = [];
+
+xa_warped_other_view = key_points_img_warped_other_view(1,matches_IPC(2,:)) ;
+ya_warped_other_view = key_points_img_warped_other_view(2,matches_IPC(2,:)) ;
+
+key_points_other_view_IPC = [xa_warped_other_view',ya_warped_other_view'];
+convex = 1;lambda_nonconvex=[];main_path = '';
+noise_flag = 1;
+frompixel_wp_other_view = from_warped_to_original_matching_vlfeet(data_name, key_points_other_view_IPC, main_path, ...
+    img_num1, lambda_flat, convex, lambda_nonconvex, gridsize);
+
+xa_warped_ref_view = key_points_img_warped_ref_view(1,matches_IPC(1,:)) ;
+ya_warped_ref_view = key_points_img_warped_ref_view(2,matches_IPC(1,:)) ;
+
+key_points_ref_IPC = [xa_warped_ref_view',ya_warped_ref_view'];
+noise_flag = 0;
+frompixel_wp_ref = from_warped_to_original_matching_vlfeet(data_name, key_points_ref_IPC, main_path, ...
+    img_num2, lambda_flat, convex, lambda_nonconvex, gridsize);
+
+matlab2colmap(key_points_img_warped_ref_view, descriptors_img_warped_ref_view, savepath_IPC, img_num2)
+
+montageSideBySide = cat(2, Ia, Ib);
+f30 = figure(30);
+imshow(montageSideBySide);
+axesHandle30 = gca(f30);
+hold (axesHandle30 , 'on');
+numMatches_IPC(counter) = size(key_points_other_view_IPC, 1);
+colors = lines(numMatches_IPC(counter)); 
+for i = 1:1:numMatches_IPC(counter)
+    x1 = frompixel_wp_other_view(i,1);
+    y1 = frompixel_wp_other_view(i,2);
+    y2 = frompixel_wp_ref(i,2);
+    x2 = frompixel_wp_ref(i,1) + size(Ib, 2);
+    plot(axesHandle30, [x1, x2], [y1, y2], 'Color', colors(i,:), 'LineWidth', 1);
+    plot(axesHandle30, x1, y1, 'o', 'Color', colors(i,:), 'MarkerSize', 3, 'LineWidth', 1.2);
+    plot(axesHandle30, x2, y2, 'o', 'Color', colors(i,:), 'MarkerSize', 3, 'LineWidth', 1.2);
+end
+title(axesHandle30, ['Matched Points with IPC: ', sprintf('%03d', img_num1) ', nbr matches: ' sprintf('%d',numMatches(counter) )]);
+saveas(gcf, ['IPC_transformed/' sprintf('%03d', img_num1) '.png']);
+hold off;
+
+
+counter = counter + 1;
+close all
+counter
+
+end
+
+figure , plot(numMatches, 'LineWidth', 1.4, 'MarkerSize', 6)
+grid on
+grid minor
+% ylim([0 250])
+ylabel('# correspondences')
+xlabel('frame number')
+hold on 
+plot(numMatches_IPC, 'LineWidth', 1.4, 'MarkerSize', 6)
+legend('Without IPC', 'With IPC')
+
+function matlab2colmap(keypoints, descriptors, save_path, img_num2)
+    % % Display keypoints on the image
+    % figure; imshow(img); hold on;
+    % plot(keypoints(1,:), keypoints(2,:), 'ro', 'MarkerSize', 2); % Plot keypoints in red circles
+    % title(sprintf('Keypoints on %s', files(i).name));
+
+    % Convert keypoints and descriptors to the required format
+    keypoints = [keypoints(1,:)', keypoints(2,:)', keypoints(3,:)', keypoints(4,:)']; % x, y, scale, orientation
+    descriptors = double(descriptors');
+    % Adjust keypoint coordinates to match COLMAP's convention
+    keypoints(:, 1:2) = keypoints(:, 1:2) + 0.5;
+
+    % Construct feature file path
+    featureFilePath = fullfile(save_path, [sprintf('%03d', img_num2), '.txt']);  % Same name as the image with .txt extension
+
+    % Open file for writing
+    fileID = fopen(featureFilePath, 'w');
+    
+    numFeatures = length(keypoints);
+    % Write the header
+
+    descriptorLength = 128;  % Standard SIFT descriptor length
+
+    fprintf(fileID, '%d %d\n', numFeatures, descriptorLength);
+
+    % Write features
+    for k = 1:numFeatures
+        fprintf(fileID, '%.2f %.2f %.2f %.2f', keypoints(k, :));  % Write keypoint data
+        fprintf(fileID, ' %d', descriptors(k, :));  % Write descriptor data
+        fprintf(fileID, '\n');
+    end
+
+    % Close the file
+    fclose(fileID);
+    
+end
