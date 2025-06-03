@@ -5,8 +5,8 @@ This repository provides the official implementation for the paper:
 > Published in *International Journal of Computer Assisted Radiology and Surgery (IJCARS), 2025*  
 
 
-> 📄 [Read the Paper](https://encov.ip.uca.fr/publications/pubfiles/2025_Sharifian_etal_IJCARS_flattening.pdf)  
-> 🎥 [Presentation Video (optional)](https://link-to-video.com)
+📄 [Read the Paper](https://encov.ip.uca.fr/publications/pubfiles/2025_Sharifian_etal_IJCARS_flattening.pdf)  
+🎥 [Presentation Video (optional)](https://link-to-video.com)
 
 ![Teaser](images/teaser.png)  
 *SurgIPC cancels the effect of perspective and boosts the number of correct correspondences. In this example, SurgIPC is added to SuperPoint-SuperGlue and boosts matching by 66\% (correspondences validated using  the camera ground-truth).*
