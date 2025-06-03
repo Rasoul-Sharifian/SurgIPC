@@ -26,7 +26,7 @@ We propose **Surgical Image Perspective Correction (SurgIPC)**, a convex method,
 ```bash
 SurgIPC/
 ├── 1_DataPreparation/               # required input data
-├── 2_DataPreprocessing/              # generating requested masks
+├── 2_DataPreprocessing/              # generating requested masks and grids
 ├── 3_Flattening/                # LLS
 ├── 4_Warping/                # warping the images
 ├── 5_Evaluation/               # Keypoint matching evaluation
