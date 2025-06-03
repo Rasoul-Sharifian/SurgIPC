@@ -7,9 +7,9 @@ This repository provides the official implementation for the paper:
 
 📄 [Read the Paper](https://encov.ip.uca.fr/publications/pubfiles/2025_Sharifian_etal_IJCARS_flattening.pdf)  
 
-🎥 [IPCAI Short Presentation](to be published)
+🎥 IPCAI Short Presentation: (link to be published)
 
-🎥 [IPCAI Long Presentation](to be published)
+🎥 IPCAI Long Presentation: (link to be published)
 
 
 ![Teaser](images/teaser.png)  
