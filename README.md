@@ -1,14 +1,3 @@
-<<<<<<< HEAD
-This repository contains the material for the paper:
-
-"SurgIPC: A Convex Image Perspective Correction Method to Boost Surgical Keypoint Matching"
-R. Sharifian, A. Bartoli – Accepted at IJCARS 2025
-=======
-# SurgIPC: a Convex Image Perspective Correction Method to Boost Surgical Keypoint Matching
-
-![Teaser](images/teaser.png)  
-*SurgIPC cancels the effect of perspective and boosts the number of correct correspondences. In this example, SurgIPC is added to SuperPoint-SuperGlue and boosts matching by 66\% (correspondences validated using  the camera ground-truth).*
-
 This repository provides the official implementation for the paper:
 
 > **SurgIPC: a Convex Image Perspective Correction Method to Boost Surgical Keypoint Matching**  
@@ -16,6 +5,10 @@ This repository provides the official implementation for the paper:
 > Published in *International Journal of Computer Assisted Radiology and Surgery (IJCARS), 2025*  
 > 📄 [Read the Paper](https://encov.ip.uca.fr/publications/pubfiles/2025_Sharifian_etal_IJCARS_flattening.pdf)  
 > 🎥 [Presentation Video (optional)](https://link-to-video.com)
+
+![Teaser](images/teaser.png)  
+*SurgIPC cancels the effect of perspective and boosts the number of correct correspondences. In this example, SurgIPC is added to SuperPoint-SuperGlue and boosts matching by 66\% (correspondences validated using  the camera ground-truth).*
+
 
 ---
 
@@ -36,4 +29,12 @@ SurgIPC/
 ├── 4_Warping/                # warping the images
 ├── 5_Evaluation/               # Keypoint matching evaluation
 ├── images/                 # images used in this repo
->>>>>>> b67cc25 (Update README with paper details and usage instructions)
+
+
+@article{sharifian2025surgipc,
+  title     = {SurgIPC: a Convex Image Perspective Correction Method to Boost Surgical Keypoint Matching},
+  author    = {Sharifian, Rasoul and Bartoli, Adrien},
+  journal   = {International Journal of Computer Assisted Radiology and Surgery},
+  year      = {2025}
+}
+
