@@ -6,7 +6,9 @@ This repository provides the official implementation for the paper:
 
 
 📄 [Read the Paper](https://encov.ip.uca.fr/publications/pubfiles/2025_Sharifian_etal_IJCARS_flattening.pdf)  
-🎥 [Presentation Video (optional)](https://link-to-video.com)
+🎥 [IPCAI Short Presentation](to be published)
+🎥 [IPCAI Long Presentation](to be published)
+
 
 ![Teaser](images/teaser.png)  
 *SurgIPC cancels the effect of perspective and boosts the number of correct correspondences. In this example, SurgIPC is added to SuperPoint-SuperGlue and boosts matching by 66\% (correspondences validated using  the camera ground-truth).*
@@ -17,7 +19,7 @@ This repository provides the official implementation for the paper:
 ## 🧠 Overview
 Keypoint detection and matching is a fundamental component of surgical image analysis. However, existing methods lack perspective invariance and their performance degrades with increasing surgical camera motion. A common workaround is to warp the image prior to keypoint detection. Unfortunately, existing warping methods are unsuitable for surgical settings, as they rely on assumptions such as scene planarity that do not hold in practice.
 
-We introduce **Surgical Image Perspective Correction (SurgIPC)**, a convex linear least-squares (LLS) approach that overcomes these limitations. Given a depth map, SurgIPC warps the image to correct for perspective distortion. The method builds upon **conformal flattening theory**, aiming to preserve angles measured in the depth map after warping, while also minimizing the adverse effects of image resampling.
+We introduce **Surgical Image Perspective Correction (SurgIPC)**, a convex linear least-squares (LLS) approach that overcomes these limitations. Given a depth map, SurgIPC warps the image to correct for perspective distortion. The method builds upon **conformal flattening theory**, aiming to preserve angles measured in the depth map after warping, while also minimising the adverse effects of image resampling.
 
 
 ---
