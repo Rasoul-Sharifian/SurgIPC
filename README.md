@@ -19,9 +19,9 @@ This repository provides the official implementation for the paper:
 ---
 
 ## 🧠 Overview
-Keypoint detection and matching is a fundamental component of surgical image analysis. However, existing methods lack perspective invariance and their performance degrades with increasing surgical camera motion. A common workaround is to warp the image prior to keypoint detection. Unfortunately, existing warping methods are unsuitable for surgical settings, as they rely on assumptions such as scene planarity that do not hold in practice.
+Keypoint detection and matching is a fundamental step in surgical image analysis. However, existing methods are not perspective invariant and thus degrade with increasing surgical camera motion amplitude. One approach to address this problem is by warping the image before keypoint detection. However, existing warping methods are inapplicable to surgical images, as they make unrealistic assumptions such as scene planarity.
 
-We introduce **Surgical Image Perspective Correction (SurgIPC)**, a convex linear least-squares (LLS) approach that overcomes these limitations. Given a depth map, SurgIPC warps the image to correct for perspective distortion. The method builds upon **conformal flattening theory**, aiming to preserve angles measured in the depth map after warping, while also minimising the adverse effects of image resampling.
+We propose **Surgical Image Perspective Correction (SurgIPC)**, a convex method, specifically a linear least-squares (LLS) one, overcoming the above limitations. Using a depthmap, SurgIPC warps the image to deal with the perspective effect. The warp exploits the theory of conformal flattening: it attempts to preserve the angles measured on the depthmap and after warping, whilst mitigating the effects of image resampling.
 
 
 ---
